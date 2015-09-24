@@ -74,7 +74,7 @@ a.Promise&&"reject"in a.Promise&&"all"in a.Promise&&"race"in a.Promise&&function
       transaction.promise = new Promise(function(resolve, reject){
         transaction.resolve = resolve;
         transaction.reject = reject;
-        if (frameWindow && frame.src == 'web+profile:' + location.origin) {
+        if (frameWindow && frame.src == 'web+profile:#') {
             post({
               transaction: id,
               action: 'connect'
@@ -88,7 +88,7 @@ a.Promise&&"reject"in a.Promise&&"all"in a.Promise&&"race"in a.Promise&&function
               action: 'connect'
             });
           }
-          frame.src = 'web+profile:' + location.origin;
+          frame.src = 'web+profile:#';
           document.body.appendChild(frame);
           frameLoaded = true;
         }
