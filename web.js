@@ -48,13 +48,13 @@ a.Promise&&"reject"in a.Promise&&"all"in a.Promise&&"race"in a.Promise&&function
 
 
   function setWebProfile(key, value){
-    var obj = JSON.parse(localStorage.webProfile || '{}');
+    var obj = JSON.parse(localStorage.__webProfile__ || '{}');
     obj[key] = value;
-    localStorage.webProfile = JSON.stringify(obj);
+    localStorage.__webProfile__ = JSON.stringify(obj);
   }
 
   function getWebProfile(key){
-    var obj = JSON.parse(localStorage.webProfile || '{}');
+    var obj = JSON.parse(localStorage.__webProfile__ || '{}');
     return key ? obj[key] : obj;
   }
 
