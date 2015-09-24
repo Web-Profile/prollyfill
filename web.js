@@ -103,14 +103,12 @@ a.Promise&&"reject"in a.Promise&&"all"in a.Promise&&"race"in a.Promise&&function
 
     },
     getProfile: function(username){
-
       /*
         This should be performed by the browser,
         platform, or OS so it comes directly from
         the blockchain instead of relying on a
         third-party middleman.
       */
-
       var name = username || this.connectedProfile;
       return fetch('https://api.onename.com/v1/users/' + name + '?app-id=11783753c820c2004667f4b17efb376d&app-secret=a31496483fa18b96b39845d66d62d15d37f5eea29aca6f161b2f6bcc0a7d8d91')
              .then(function(response){
