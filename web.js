@@ -66,7 +66,7 @@ a.Promise&&"reject"in a.Promise&&"all"in a.Promise&&"race"in a.Promise&&function
   navigator.webProfile = {
     connectedProfile: getWebProfile('connectedProfile'),
     registerProvider: function(name, uri){
-      navigator.registerProtocolHandler('web+profile', uri + '%s', name);
+      navigator.registerProtocolHandler('web+profile', uri + '?data=%s', name);
     },
     connect: function(){
       var id = transactionID++;
