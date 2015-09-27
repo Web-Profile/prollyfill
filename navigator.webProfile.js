@@ -18,7 +18,7 @@
       navigator.registerProtocolHandler('web+profile', uri + '?%s', name);
     },
     connect: function(){
-      return navigator.protocolRequest({
+      return navigator.protocolRequest('web+profile', {
         action: 'connect'
       }).then(function(username){
         setWebProfile('connectedProfile', username);
