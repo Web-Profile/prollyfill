@@ -8,11 +8,11 @@
     transaction.data = transaction.data || {};
     return new Promise(function(resolve, reject){
       handler = handlers[protocol] || establishConnection(protocol);
+      var id = transaction.data.__prototcolRequestID__ = Math.random().toString(36).substr(2, 16);
       transaction.data.protocol = protocol;
-      transaction.data.__prototcolRequestID__ = Math.random().toString(36).substr(2, 16);
       transaction.resolve = resolve;
       transaction.reject = reject;
-      handler.transactions[__prototcolRequestID__] = transaction;
+      handler.transactions[id] = transaction;
       messageFrame(handler, transaction);
     });
   }
