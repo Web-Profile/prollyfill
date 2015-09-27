@@ -4,12 +4,12 @@
   var handlers = {};
 
   navigator.protocolRequest = function(protocol, obj){
-    var transaction = obj || {};
-    transaction.data = transaction.data || {};
+    var transaction = {};
+    transaction.data = obj;
     return new Promise(function(resolve, reject){
       handler = handlers[protocol] || establishConnection(protocol);
       var id = transaction.data.__prototcolRequestID__ = Math.random().toString(36).substr(2, 16);
-      transaction.data.protocol = protocol;
+      transaction.data.__protocolRequestType__ = protocol;
       transaction.resolve = resolve;
       transaction.reject = reject;
       handler.transactions[id] = transaction;
@@ -31,7 +31,6 @@
         frame.style.width = '0px';
         frame.style.height = '0px';
         frame.style.border = 'none';
-        frame.__protocolRequestHandler___ = handler;
         frame.onload = function(event){
           handler.connected = true;
           for (var z in handler.transactions) messageFrame(handler, handler.transactions[z]);
@@ -49,35 +48,30 @@
   }
 
   window.addEventListener('message', function(event){
-    var handler = event.source.__protocolRequestHandler___;
     var data = JSON.parse(event.data);
-    if (handler) { // this is an indication the script is running in the host page
-      handler.transactions[data.__prototcolRequestID__].resolve(data.response);
+    if (window == window.top && !window.opener) { // this is an indication the script is running in the host page
+      handlers[data.__protocolRequestType__].transactions[data.__prototcolRequestID__].resolve(data.response);
     }
     else if (data.__prototcolRequestID__) { // this is for messages arriving in the frame
-      var message = new ProtocolMessage(event, data);
-      fireEvent(window, 'protocolrequest', message);
+      var protocol = data.__protocolRequestType__;
+      var id = data.__prototcolRequestID__;
+      delete data.__protocolRequestType__;
+      delete data.__prototcolRequestID__;
+      fireEvent(window, 'protocolrequest', Object.create(data, {
+        respond: {
+          value: function(obj){
+          obj.__protocolRequestType__ = protocol;
+          obj.__prototcolRequestID__ = id;
+          event.source.postMessage(JSON.stringify(obj), '*');
+        }}
+      }));
     }
   });
 
   function fireEvent(element, type, detail){
-    var event = doc.createEvent('CustomEvent');
-    options = options || {};
+    var event = document.createEvent('CustomEvent');
     event.initCustomEvent(type, false, false, detail);
     element.dispatchEvent(event);
   }
-
-  function ProtocolMessage(event, data){
-    this.protocol = data.protocol;
-    this.source = event.source;
-    this.__prototcolRequestID__ = data.__prototcolRequestID__;
-    delete data.__prototcolRequestID__;
-    this.data = data;
-  }
-
-    ProtocolMessage.prototype.respond = function(obj){
-      obj.__prototcolRequestID__ = this.__prototcolRequestID__;
-      this.source.postMessage(JSON.stringify(this.data), '*');
-    }
 
 })();
