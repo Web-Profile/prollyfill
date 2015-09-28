@@ -9,7 +9,7 @@
     },
     connect: function(){
       return worker.connect().then(function(response){
-        navigator.webProfile.id = response.username;
+        navigator.webProfile.id = response.id;
         return response;
       })
     },
